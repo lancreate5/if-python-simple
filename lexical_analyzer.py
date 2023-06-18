@@ -33,7 +33,7 @@ def analyze(input_string):
             else:               state = -1
         elif state == 71:
             if c == ":":        state = 69
-            elif not(c in "pqrst"): state = -1
+            else:               state = -1
         elif state == 72:
             if c == "a":        state = 4
             elif c in "pqrst":  state = 71

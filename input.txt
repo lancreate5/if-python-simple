@@ -1,2 +1,2 @@
 if q > q: pass
-sif q > q: pass
+if q > p : pass
