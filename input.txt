@@ -1,4 +1,2 @@
-sif apqpqpqpq > qrpqp: pass
-ifs pqpqpqpqa == qrpqp: pass
-if pqpqpqpq != qq: pass
-if pqpqpqpq != qq:pass
+if q > q: pass
+sif q > q: pass
