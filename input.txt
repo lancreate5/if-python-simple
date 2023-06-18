@@ -1,2 +1,5 @@
-if q > q: pass
-if q > p : pass
+if p > q: pass
+if q > p: pass
+if True: pass
+if False : pass
+if False > p: pass

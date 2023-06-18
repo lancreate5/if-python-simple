@@ -3,12 +3,13 @@ OPERATORS = ["==", "!=",
              ">", ">=",
              "<", "<="]
 VAR_LETTERS = "pqrst"
-FIRST_LIST = {
+TERMINAL_FIRST = {
     "statement": ["if"],
     "condition" : ["p", "q", "r", "s", "t"],
     "variabel" : ["p", "q", "r", "s", "t"],
     "operator" : ["==", "!=", ">", ">=", "<", "<="],
-    "aksi"     : ["pass"]
+    "aksi"     : ["pass"],
+    "boolean"     : ["True", "False"]
 }
 
 # (variable, is_terminal)
@@ -33,11 +34,20 @@ def parse(words):
                 STACK.append((":", 1))
                 STACK.append(("condition", 0))
                 STACK.append(("if", 1))
-            elif stack_top == "condition" and symbol in VAR_LETTERS:
-                STACK.pop()
-                STACK.append(("variabel", 0))
-                STACK.append(("operator", 0))
-                STACK.append(("variabel", 0))
+            elif stack_top == "condition":
+                if symbol[-1] == ":":
+                    symbol = symbol[:-1]
+
+                if symbol in VAR_LETTERS:
+                    STACK.pop()
+                    STACK.append(("variabel", 0))
+                    STACK.append(("operator", 0))
+                    STACK.append(("variabel", 0))
+                elif symbol in ["True", "False"]:
+                    STACK.pop()
+                    STACK.append(("boolean", 0))
+                else:
+                    grammar_correct = False
             elif stack_top == "variabel":
                 if symbol[-1] == ":":
                     symbol = symbol[:-1]
@@ -45,12 +55,23 @@ def parse(words):
                 if symbol[:-1] in VAR_LETTERS:
                     STACK.pop()
                     STACK.append((symbol, 1))
+                else:
+                    grammar_correct = False
             elif stack_top == "operator" and symbol in OPERATORS:
                 STACK.pop()
                 STACK.append((symbol, 1))
             elif stack_top == "aksi" and symbol == "pass":
                 STACK.pop()
                 STACK.append(("pass", 1))
+            elif stack_top == "boolean":
+                if symbol[-1] == ":":
+                    symbol = symbol[:-1]
+
+                if symbol in ["True", "False"]:
+                    STACK.pop()
+                    STACK.append((symbol, 1))
+                else:
+                    grammar_correct = False
             else:
                 grammar_correct = False
         else:
@@ -64,6 +85,12 @@ def parse(words):
                 ptr += 1
             elif stack_top in OPERATORS:
                 STACK.pop()
+                ptr += 1
+                STACK.pop()
+            elif stack_top in ["True", "False"]:
+                STACK.pop()
+                if symbol[-1] == ":":
+                    STACK.pop()
                 ptr += 1
             elif stack_top == "pass":
                 STACK.pop()
@@ -79,6 +106,7 @@ def parse(words):
     grammar_correct = False if STACK != [("#", 1)] else True
     if not(grammar_correct):
         print("Something is wrong with the grammar of your input!")
-        print(f"expected: {' | '.join(FIRST_LIST[STACK[-1][0]])}, get: {words[ptr]}")
+        print(f"expected: {STACK[-1][0]}, get: {words[ptr]}")
+        if not(terminal): print(f"example: {' | '.join(TERMINAL_FIRST[STACK[-1][0]])}")
     else:
         print("All clear! No problem detected")

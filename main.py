@@ -28,7 +28,7 @@ def analyze(words):
 def main():
     with open("input.txt", "r") as file:
         for words in file.readlines():
-            print("========", "VERIFYING INPUT:", words[:-2], "========")
+            print("========", "VERIFYING", f"\"{words[:-1]}\"", "========")
             analyze(words)
             print("======== VERIFICATION DONE! ===========\n")
 
